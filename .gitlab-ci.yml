@@ -37,8 +37,8 @@ terraform_init-job:
 wait_job:
   stage: wait
   script:
-    - echo "Waiting for 12 minutes before continuing..."
-    - sleep 720  # Sleep for 12 minutes (720 seconds)
+    - echo "Waiting for 15 minutes before continuing..."
+    - sleep 900  # Sleep for 15 minutes (900 seconds)
 
 cme-config:
   stage: cme
