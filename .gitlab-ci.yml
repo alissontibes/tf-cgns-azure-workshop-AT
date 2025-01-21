@@ -1,6 +1,6 @@
 
 stages:          # List of stagess for jobs, and their order of execution1
-- terraform
+- management
 - wait
 - cme
 - policy
@@ -9,7 +9,7 @@ stages:          # List of stagess for jobs, and their order of execution1
 
 
 terraform_init-job:
-  stage: terraform
+  stage: management
   image:
     name: hashicorp/terraform:latest
     entrypoint: [""]
@@ -20,12 +20,12 @@ terraform_init-job:
 
   script:
     - cd terraform/azure/management-new-vnet
-    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io
-    - terraform init  # Inicializa o Terraforma
-    - terraform plan  #Gera o plano de execução do Terraform
+    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io #use terraform cloud token
+    - terraform init  # Initialize Terraform
+    - terraform plan  #Generates the Terraform execution plan
     - terraform apply -auto-approve
-    - terraform output -raw vm_public_ip
-    - export VM_PUBLIC_IP=$(terraform output -raw vm_public_ip)  # Store the public IP in a variable
+    - terraform output -raw vm_public_ip #show the Public IP
+    - export VM_PUBLIC_IP=$(terraform output -raw vm_public_ip)  #Store the public IP in a variable
     - echo "VM Public IP=$VM_PUBLIC_IP"  # This will make the VM IP available as an environment variable in subsequent jobs
     - echo "VM_PUBLIC_IP=$VM_PUBLIC_IP" > /builds/alisson-2025-training/terraform-deployment/.env  # Create the .env file with the public IP
     - cat /builds/alisson-2025-training/terraform-deployment/.env #Optional #Print the .env file to ensure it's created correctly
@@ -46,13 +46,13 @@ cme-config:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   before_script:
-    - terraform --version  # Verifica se o Terraform foi instalado corretamentea
+    - terraform --version  
     - source /builds/alisson-2025-training/terraform-deployment/.env  # Load the environment variables saved from the previous job
 
   script:
     - cd terraform/azure/cme
-    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io
-    - terraform init  # Inicializa o Terraforma
+    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io #use terraform cloud token
+    - terraform init
     - echo "VM Public IP:$VM_PUBLIC_IP"  # Display the public IP (optional)
     - terraform plan -var="vm_public_ip=$VM_PUBLIC_IP"  # Pass the public IP as a variable to the second Terraform configuration
     - terraform apply -var="vm_public_ip=$VM_PUBLIC_IP" -auto-approve  # Apply the changes with the passed IP address
@@ -64,14 +64,14 @@ policy-install:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   before_script:
-    - terraform --version  # Verifica se o Terraform foi instalado corretamentea
+    - terraform --version 
     - source /builds/alisson-2025-training/terraform-deployment/.env  # Load the environment variables saved from the previous job
 
 
   script:
     - cd terraform/azure/policy
-    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io
-    - terraform init  # Inicializa o Terraforma
+    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io #use terraform cloud token
+    - terraform init
     - terraform plan -var="vm_public_ip=$VM_PUBLIC_IP"  # Pass the public IP as a variable to the second Terraform configuration
     - terraform apply -var="vm_public_ip=$VM_PUBLIC_IP" -auto-approve  # Apply the changes with the passed IP address
 
@@ -81,13 +81,13 @@ vmss-creation:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   before_script:
-    - terraform --version  # Verifica se o Terraform foi instalado corretamentea
+    - terraform --version 
 
   script:
     - cd terraform/azure/vmss-new-vnet
-    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io
-    - terraform init  # Inicializa o Terraforma
-    - terraform plan  #Gera o plano de execução doa Terraform
+    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io #use terraform cloud token
+    - terraform init 
+    - terraform plan 
     - terraform apply -auto-approve
 
 #destroy-env:
@@ -96,22 +96,22 @@ vmss-creation:
 #    name: hashicorp/terraform:latest
 #    entrypoint: [""]
 #  before_script:
-#    - terraform --version  # Verifica se o Terraform foi instalado corretamentea
+#    - terraform --version
 #    - source /builds/alisson-2025-training/terraform-deployment/.env  # Load the environment variables saved from the previous job
-#    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io   
+#    - export TF_TOKEN_app_terraform_io=$TF_TOKEN_app_terraform_io #use terraform cloud token
 
 #  script:
 #    - cd /builds/alisson-2025-training/terraform-deployment/terraform/azure/policy
-#    - terraform init  # Inicializa o Terraforma
+#    - terraform init
 #    - terraform destroy -var="vm_public_ip=$VM_PUBLIC_IP" -auto-approve
 #    - pwd
 #    - cd /builds/alisson-2025-training/terraform-deployment/terraform/azure/cme
 #    - pwd
-#    - terraform init  # Inicializa o Terraforma
+#    - terraform init
 #    - terraform destroy -var="vm_public_ip=$VM_PUBLIC_IP" -auto-approve
 #    - cd /builds/alisson-2025-training/terraform-deployment/terraform/azure/management-new-vnet
-#    - terraform init  # Inicializa o Terraforma
+#    - terraform init
 #    - terraform destroy -auto-approve
 #   - cd /builds/alisson-2025-training/terraform-deployment/terraform/azure/vmss-new-vnet
-#    - terraform init  # Inicializa o Terraforma
+#    - terraform init
 #    - terraform destroy -auto-approve
