@@ -15,7 +15,7 @@ terraform_init-job:
     entrypoint: [""]
 
   before_script:
-    - terraform --version  # Verifica se o Terraform foi instalado corretamente
+    - terraform --version
 
 
   script:
