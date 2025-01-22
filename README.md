@@ -1,20 +1,14 @@
-# Check Point CloudGuard Network Repository Overview
-Check Point CloudGuard Network (formerly known as CloudGuard IaaS) repository.
+#Repository for Check Point deployment in Azure
+#Workshop for CGNS using Terraform deploying Security Manager, VMSS Gateways and configuration CME and also a single policy.
 
 The repository contains:
 
-* Solution/CloudFormation templates
 * Terraform modules
 * Tools and scripts that can be used with CloudGuard for Public Cloud solutions
-* Deprecated Solution/CloudFormation templates
-* Community-supported content
+
 
 ## Related Products and Solutions
 * CloudGuard Network Security for Azure
-* CloudGuard Network Security  for AWS
-* CloudGuard Network Security for GCP
-* CloudGuard Network Security for AliCloud
-* CloudGuard Network Security  for Azure Stack
 
 ## References
 * For more information about Check Point CloudGuard for Public Cloud, see https://www.checkpoint.com/products/iaas-public-cloud-security/
